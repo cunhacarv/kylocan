@@ -3,6 +3,10 @@
     session_start();
     $email = isset($_POST["email"])?addslashes(trim($_POST["email"])):FALSE;
     $senha = isset($_POST["senha"])?md5(trim($_POST["senha"])):FALSE;
+    //echo "email: ";
+    //var_dump($email);
+    //echo "Senha: ";
+    //echo "$senha<br>";
     if(!$email || !$senha){
         echo "Senha ou email não foram digitados!!!";
         exit;
@@ -26,7 +30,11 @@
             $_SESSION["cidade"] = $linha["cidade"];
             $_SESSION["cep"] = $linha["cep"];
             $_SESSION["email"] = $linha["email"];
-            header("location: #");
+            header("location: perfil.php");
+        }else{
+            echo "<h2>Senha ou email não conferem!!!</h2>";
+            echo "<h3>Tente novamente!</h3>";
+            echo "<a href='Mobile_Lines.html'><button type='button'>VOLTAR</button></a>";
         }
     }
 ?>

@@ -3,13 +3,147 @@
  <head>
     <title> Formulário de Cadastro </title>
     <meta name="description" content="Aprenda a criar um site completo que usa formulários em HTML">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" >
+    
+    function limpa_formulario_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+            //document.getElementById('ibge').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            //document.getElementById('ibge').value=(conteudo.ibge);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulario_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+        
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+                //document.getElementById('ibge').value="...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulario_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulario_cep();
+        }
+    };
+
+        function validaformulario() {
+            var nome = document.forms["formulario"]["nome"].value;
+            var nascimento = document.forms["formulario"]["nascimento"].value;
+            var rg = document.forms["formulario"]["rg"].value;
+            var cpf = document.forms["formulario"]["cpf"].value;
+            var celular = document.forms["formulario"]["celular"].value;
+            var rua = document.forms["formulario"]["rua"].value;
+            var numero = document.forms["formulario"]["numero"].value;
+            var bairro = document.forms["formulario"]["bairro"].value;
+            var cidade = document.forms["formulario"]["cidade"].value;
+            var cep = document.forms["formulario"]["cep"].value;
+            var email = document.forms["formulario"]["email"].value;
+            var senha = document.forms["formulario"]["senha"].value;
+            var passconfirm = document.forms["formulario"]["passconfirm"].value;
+            if (nome == ""){
+                alert("Digite seu nome!!!");
+                return false;
+            }
+            if (nascimento == ""){
+                alert("insira uma data!!!");
+                return false;
+            }
+            if (rg == ""){
+                alert("Digite o RG!!!");
+                return false;
+            }
+            if (cpf == ""){
+                alert("Digite o CPF!!!");
+                return false;
+            }
+            if (celular == ""){
+                alert("Digite um celular!!!");
+                return false;
+            }
+            if (rua == ""){
+                alert("Digite a Rua!!!");
+                return false;
+            }
+            if (numero == ""){
+                alert("Digite o número da sua casa!!!");
+                return false;
+            }
+            if (bairro == ""){
+                alert("Digite o bairro!!!");
+                return false;
+            }
+            if (cidade == ""){
+                alert("Digite a cidade!!!");
+                return false;
+            }
+            if (cep == ""){
+                alert("Digite o CEP!!!");
+                return false;
+            }
+            if (email == ""){
+                alert("Digite um email!!!");
+                return false;
+            }
+            if (senha != passconfirm){
+                alert("Senha não confere!!!");
+                return false;
+            }
+        }
+    </script> 
  </head>
  <body>
   <h1> Bem vindo ao nosso Cadastro</h1> 
   <h2> Preencha o formulário abaixo para efetuar suas compras</h2><br/>
 
-<form action="php_acao/cadastronovousuario.php" method="post">
+<form name="formulario" action="php_acao/cadastronovousuario.php" onsubmit = "return validaformulario()" method="post">
 
 <!-- DADOS PESSOAIS-->
 <fieldset>
@@ -77,7 +211,7 @@
     <label for="rua">Rua:</label>
    </td>
    <td align="left">
-    <input type="text" name="rua">
+    <input type="text" id="rua" name="rua">
    </td>
    <td>
     <label for="numero">Número:</label>
@@ -91,7 +225,7 @@
     <label for="bairro">Bairro: </label>
    </td>
    <td align="left">
-    <input type="text" name="bairro">
+    <input type="text" id="bairro" name="bairro">
    </td>
   </tr>
   <tr>
@@ -99,7 +233,7 @@
     <label for="estado">Estado:</label>
    </td>
    <td align="left">
-    <select name="estado"> 
+    <select name="estado" id="uf"> 
     <option value="Acre">Acre</option> 
     <option value="Alagoas">Alagoas</option> 
     <option value="Amazonas">Amazonas</option> 
@@ -118,7 +252,7 @@
     <option value="Paraná">Paraná</option> 
     <option value="Pernambuco">Pernambuco</option> 
     <option value="Piauí">Piauí</option> 
-    <option value="Rio de Janeiro">Rio de Janeiro</option> 
+    <option value="RJ">Rio de Janeiro</option> 
     <option value="Rio Grande do Norte">Rio Grande do Norte</option> 
     <option value="Rondônia">Rondônia</option> 
     <option value="Rio Grande do Sul">Rio Grande do Sul</option> 
@@ -135,7 +269,7 @@
     <label for="cidade">Cidade: </label>
    </td>
    <td align="left">
-    <input type="text" name="cidade">
+    <input type="text" name="cidade" id="cidade">
    </td>
   </tr>
   <tr>
@@ -143,7 +277,7 @@
     <label for="cep">CEP: </label>
    </td>
    <td align="left">
-    <input type="text" name="cep" size="9" maxlength="9" placeholder="11111-111">
+    <input type="text" name="cep" size="10" maxlength="9" id="cep" value="" onblur="pesquisacep(this.value);">
    </td>
   </tr>
  </table>
@@ -167,7 +301,7 @@
     <label for="senha">Senha: </label>
    </td>
    <td align="left">
-    <input type="password" name="senha">
+    <input type="password" name="senha"><span id="errosenha"> </span>
    </td>
   </tr>
   <tr>
@@ -175,7 +309,7 @@
     <label for="passconfirm">Confirme a senha: </label>
    </td>
    <td align="left">
-    <input type="password" name="passconfirm">
+    <input type="password" name="passconfirm"><input type="hidden" name="tipo" value="comum"><input type="hidden" name="ativo" value="s">
    </td>
   </tr>
  </table>
