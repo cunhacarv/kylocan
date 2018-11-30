@@ -1,34 +1,31 @@
 <?php
     require "conexao.php";
     if($_POST){
-        $nome = $_POST["nome"];
+        $nome = trim($_POST["nome"]);
         $sexo = $_POST["sexo"];
         $nascimento = $_POST["nascimento"];
-        $rg = $_POST["rg"];
-        $cpf = $_POST["cpf"];
-        $celular = $_POST["celular"];
-        $rua = $_POST["rua"];
-        $numero = $_POST["numero"];
-        $bairro = $_POST["bairro"];
+        $rg = trim($_POST["rg"]);
+        $cpf = trim($_POST["cpf"]);
+        $celular = trim($_POST["celular"]);
+        $rua = trim($_POST["rua"]);
+        $numero = trim($_POST["numero"]);
+        $bairro = trim($_POST["bairro"]);
         $estado = $_POST["estado"];
-        $cidade = $_POST["cidade"];
-        $cep = $_POST["cep"];
-        $email = $_POST["email"];
-        $senha = $_POST["senha"];
-        $passconfirm = $_POST["passconfirm"];
-        if($senha != $passconfirm){
-            echo "Senhas não conferem, volte e refaça o cadastro!!!";
-            echo "<a href='../formulario.html'><button type='button'>VOLTAR</button></a>";
+        $cidade = trim($_POST["cidade"]);
+        $cep = trim($_POST["cep"]);
+        $email = trim($_POST["email"]);
+        $senha = md5(trim($_POST["senha"]));
+        $passconfirm = md5(trim($_POST["passconfirm"]));
+        $tipo = $_POST["tipo"];
+        $ativo = $_POST["ativo"];
+        $sql = "INSERT INTO clientes (nome, sexo, nascimento, rg, cpf, celular, rua, numero, bairro, estado, cidade, cep, email, senha, tipousuario, ativo) 
+        VALUES ('$nome', '$sexo', '$nascimento', '$rg', '$cpf', '$celular', '$rua', '$numero', '$bairro', '$estado', '$cidade', '$cep', '$email', '$senha', '$tipo', '$ativo')";
+        if($connect->query($sql)){
+            echo "Cliente adicionado com sucesso!!!!";
+            echo "<a href='#'><button type='button'>VOLTAR</button></a>";
         }else{
-            $sql = "INSERT INTO clientes (nome, sexo, nascimento, rg, cpf, celular, rua, numero, bairro, estado, cidade, cep, email, senha) 
-            VALUES ('$nome', '$sexo', '$nascimento', '$rg', '$cpf', '$celular', '$rua', '$numero', '$bairro', '$estado', '$cidade', '$cep', '$email', '$senha')";
-            if($connect->query($sql)){
-                echo "Cliente adicionado com sucesso!!!!";
-                echo "<a href='#'><button type='button'>VOLTAR</button></a>";
-            }else{
-                echo "Erro ".$sql." ".$connect->connect_error;
-            }
-            $connect->close();
-        }      
-    }
+            echo "Erro ".$sql." ".$connect->connect_error;
+        }
+        $connect->close();
+    }      
 ?>
